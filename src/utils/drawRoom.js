@@ -1,4 +1,3 @@
-// Function to draw the room with the position marked
 const drawRoom = (room, x, y) => {
   const height = room.length;
   const width = room[0].length;
