@@ -4,6 +4,8 @@ import getDimension from './utils/getDimension.js';
 import getStartPosition from './utils/getStartPosition.js';
 import isPositionValid from './utils/isPositionValid.js';
 import drawRoom from './utils/drawRoom.js';
+import getCommands from './utils/getCommands.js';
+import { directions, moves } from './utils/constants.js';
 
 const input = readline.createInterface({
   input: process.stdin,
@@ -28,6 +30,27 @@ async function main() {
   console.log(`\nStarting position: (${x} ${y}) ${orientation}`);
   drawRoom(room, x, y);
 
+  const commands = await getCommands(input, '\nEnter commands \n- L: Turn left\n- R: Turn right\n- F: Walk forward: \n');
+
+  for (const command of commands.toUpperCase()) {
+    if (command === 'L') {
+      orientation = directions[(directions.indexOf(orientation) + 3) % 4];
+    } else if (command === 'R') {
+      orientation = directions[(directions.indexOf(orientation) + 1) % 4];
+    } else if (command === 'F') {
+      const move = moves[orientation];
+      x += move.x;
+      y += move.y;
+
+      if (!isPositionValid(x, y, width, height)) {
+        console.error('\x1b[31m\nError: Robot moved out of room. \nExiting...\x1b[0m');
+        process.exit(1);
+      }
+    }
+  }
+
+  console.log(`\nFinal position: (${x} ${y}) ${orientation}`);
+  drawRoom(room, x, y);
   input.close();
 }
 
