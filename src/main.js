@@ -54,6 +54,9 @@ async function main() {
   input.close();
 }
 
-main();
+main().catch((error) => {
+  console.error('\x1b[31mAn error occurred. \nExiting...\x1b[0m', error.message);
+  process.exit(1);
+});
 
 export default main;
